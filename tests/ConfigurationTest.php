@@ -29,18 +29,6 @@ class ConfigurationTest extends TestCase
         ], $configuration->toArray());
     }
 
-    public function testResolve(): void
-    {
-        $configs = [
-            'appid' => 'test_appid',
-            'public_key' => static::PUBLIC_KEY,
-            'private_key' => static::PRIVATE_KEY,
-        ];
-
-        $configuration = static::create($configs);
-        static::assertEquals($configuration->toArray(), $configuration->resolve($configs));
-    }
-
     public function testPublicKeyAsString(): void
     {
         $configuration = static::create([
