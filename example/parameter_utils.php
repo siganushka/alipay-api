@@ -16,5 +16,5 @@ $options = [
     'total_amount' => '0.01',
 ];
 
-$appParameter = $parameterUtils->app($options);
-dump('APP 支付参数：', $appParameter);
+$parameter = $parameterUtils->app($options);
+dump('APP 支付参数：', $parameter);
