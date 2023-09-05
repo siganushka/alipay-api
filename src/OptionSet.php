@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionConfigurator;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class OptionsUtils
+final class OptionSet
 {
     public const SIGN_TYPE_RSA = 'RSA';
     public const SIGN_TYPE_RSA2 = 'RSA2';

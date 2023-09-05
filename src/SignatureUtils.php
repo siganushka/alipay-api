@@ -33,7 +33,7 @@ class SignatureUtils implements ResolverInterface
         $data = http_build_query($rawData);
         $data = urldecode($data);
 
-        $algorithm = (OptionsUtils::SIGN_TYPE_RSA === $resolved['sign_type'])
+        $algorithm = (OptionSet::SIGN_TYPE_RSA === $resolved['sign_type'])
             ? \OPENSSL_ALGO_SHA1
             : \OPENSSL_ALGO_SHA256;
 
@@ -72,7 +72,7 @@ class SignatureUtils implements ResolverInterface
             return false;
         }
 
-        $algorithm = (OptionsUtils::SIGN_TYPE_RSA === $resolved['sign_type'])
+        $algorithm = (OptionSet::SIGN_TYPE_RSA === $resolved['sign_type'])
             ? \OPENSSL_ALGO_SHA1
             : \OPENSSL_ALGO_SHA256;
 
@@ -87,9 +87,9 @@ class SignatureUtils implements ResolverInterface
 
     protected function configureOptions(OptionsResolver $resolver): void
     {
-        OptionsUtils::public_key($resolver);
-        OptionsUtils::private_key($resolver);
-        OptionsUtils::sign_type($resolver);
+        OptionSet::public_key($resolver);
+        OptionSet::private_key($resolver);
+        OptionSet::sign_type($resolver);
 
         $resolver
             ->define('data')

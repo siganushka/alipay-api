@@ -14,8 +14,8 @@ class Configuration extends AbstractConfiguration
 {
     public static function configureOptions(OptionsResolver $resolver): void
     {
-        OptionsUtils::appid($resolver);
-        OptionsUtils::public_key($resolver);
-        OptionsUtils::private_key($resolver);
+        OptionSet::appid($resolver);
+        OptionSet::public_key($resolver);
+        OptionSet::private_key($resolver);
     }
 }

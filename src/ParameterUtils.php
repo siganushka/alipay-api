@@ -77,10 +77,10 @@ class ParameterUtils implements ResolverInterface
 
     protected function configureOptions(OptionsResolver $resolver): void
     {
-        OptionsUtils::appid($resolver);
-        OptionsUtils::public_key($resolver);
-        OptionsUtils::private_key($resolver);
-        OptionsUtils::sign_type($resolver);
+        OptionSet::appid($resolver);
+        OptionSet::public_key($resolver);
+        OptionSet::private_key($resolver);
+        OptionSet::sign_type($resolver);
 
         $resolver
             ->define('notify_url')
