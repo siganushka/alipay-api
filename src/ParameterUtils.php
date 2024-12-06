@@ -20,7 +20,7 @@ class ParameterUtils implements ResolverInterface
 
     private SignatureUtils $signatureUtils;
 
-    public function __construct(SignatureUtils $signatureUtils = null)
+    public function __construct(?SignatureUtils $signatureUtils = null)
     {
         $this->signatureUtils = $signatureUtils ?? new SignatureUtils();
     }
@@ -61,7 +61,7 @@ class ParameterUtils implements ResolverInterface
             'version' => '1.0',
             'notify_url' => $resolved['notify_url'],
             'app_auth_token' => $resolved['app_auth_token'],
-            'biz_content' => json_encode($bizContent, \JSON_UNESCAPED_UNICODE),
+            'biz_content' => json_encode($bizContent),
         ], fn ($value) => null !== $value);
 
         // Generate signature

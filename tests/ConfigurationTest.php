@@ -31,6 +31,7 @@ class ConfigurationTest extends TestCase
 
     public function testPublicKeyAsString(): void
     {
+        /** @var array{ public_key: string, public_key: string } */
         $configuration = static::create([
             'appid' => 'test_appid',
             'public_key' => '
@@ -47,6 +48,7 @@ ciuSZgZmuT7HtoNRGQIDAQAB',
 
     public function testPrivateKeyAsString(): void
     {
+        /** @var array{ private_key: string } */
         $configuration = static::create([
             'appid' => 'test_appid',
             'public_key' => static::PUBLIC_KEY,
@@ -106,7 +108,7 @@ qZmgD4svzyYKUHe7xbgpR/87+GHuH/nJhGS7tf/6/Z0Z',
         ]);
     }
 
-    public static function create(array $configs = null): Configuration
+    public static function create(?array $configs = null): Configuration
     {
         if (null === $configs) {
             $configs = [

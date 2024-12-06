@@ -10,19 +10,13 @@ use Siganushka\ApiFactory\Alipay\SignatureUtils;
 
 class ParameterUtilsTest extends TestCase
 {
-    private ?SignatureUtils $signatureUtils = null;
-    private ?ParameterUtils $parameterUtils = null;
+    protected SignatureUtils $signatureUtils;
+    protected ParameterUtils $parameterUtils;
 
     protected function setUp(): void
     {
         $this->signatureUtils = new SignatureUtils();
         $this->parameterUtils = new ParameterUtils($this->signatureUtils);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->signatureUtils = null;
-        $this->parameterUtils = null;
     }
 
     public function testResolve(): void
@@ -134,12 +128,15 @@ class ParameterUtilsTest extends TestCase
         static::assertArrayHasKey('biz_content', $parsed);
         static::assertArrayHasKey('sign', $parsed);
 
+        /** @var string */
+        $bizContent = $parsed['biz_content'];
         static::assertEquals([
             'subject' => 'test_subject',
             'out_trade_no' => 'test_out_trade_no',
             'total_amount' => 'test_total_amount',
-        ], json_decode($parsed['biz_content'], true));
+        ], json_decode($bizContent, true));
 
+        /** @var string */
         $signature = $parsed['sign'];
         unset($parsed['sign']);
 

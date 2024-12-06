@@ -14,15 +14,18 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
- * @see https://opendocs.alipay.com/apis/api_1/alipay.trade.query
+ * @extends AbstractRequest<array>
  */
 class Query extends AbstractRequest
 {
+    /**
+     * @see https://opendocs.alipay.com/apis/api_1/alipay.trade.query
+     */
     public const URL = 'https://openapi.alipay.com/gateway.do';
 
     private SignatureUtils $signatureUtils;
 
-    public function __construct(HttpClientInterface $httpClient = null, SignatureUtils $signatureUtils = null)
+    public function __construct(?HttpClientInterface $httpClient = null, ?SignatureUtils $signatureUtils = null)
     {
         $this->signatureUtils = $signatureUtils ?? new SignatureUtils();
 
@@ -91,7 +94,7 @@ class Query extends AbstractRequest
             'timestamp' => date('Y-m-d H:i:s'),
             'version' => '1.0',
             'app_auth_token' => $options['app_auth_token'],
-            'biz_content' => json_encode($bizContent, \JSON_UNESCAPED_UNICODE),
+            'biz_content' => json_encode($bizContent),
         ], fn ($value) => null !== $value);
 
         // Generate signature
@@ -121,6 +124,6 @@ class Query extends AbstractRequest
         $subCode = $alipayResponse['sub_code'] ?? ($alipayResponse['code'] ?? '00000');
         $subMsg = $alipayResponse['sub_msg'] ?? ($alipayResponse['msg'] ?? 'error');
 
-        throw new ParseResponseException($response, sprintf('%s (%s)', $subMsg, $subCode));
+        throw new ParseResponseException($response, \sprintf('%s (%s)', $subMsg, $subCode));
     }
 }

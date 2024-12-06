@@ -14,19 +14,13 @@ use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 class RefundTest extends TestCase
 {
-    protected ?Refund $request = null;
-    protected ?SignatureUtils $signatureUtils = null;
+    protected Refund $request;
+    protected SignatureUtils $signatureUtils;
 
     protected function setUp(): void
     {
         $this->signatureUtils = new SignatureUtils();
         $this->request = new Refund(null, $this->signatureUtils);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->request = null;
-        $this->signatureUtils = null;
     }
 
     public function testResolve(): void
@@ -164,7 +158,7 @@ class RefundTest extends TestCase
             'msg' => 'success',
         ];
 
-        $body = json_encode(['alipay_trade_refund_response' => $data], \JSON_UNESCAPED_UNICODE);
+        $body = json_encode(['alipay_trade_refund_response' => $data], \JSON_THROW_ON_ERROR);
 
         $mockResponse = new MockResponse($body);
         $client = new MockHttpClient($mockResponse);
@@ -192,7 +186,7 @@ class RefundTest extends TestCase
             'msg' => 'error',
         ];
 
-        $body = json_encode(['alipay_trade_refund_response' => $data], \JSON_UNESCAPED_UNICODE);
+        $body = json_encode(['alipay_trade_refund_response' => $data], \JSON_THROW_ON_ERROR);
 
         $mockResponse = new MockResponse($body);
         $client = new MockHttpClient($mockResponse);
@@ -221,7 +215,7 @@ class RefundTest extends TestCase
             'sub_msg' => 'test_sub_msg',
         ];
 
-        $body = json_encode(['alipay_trade_refund_response' => $data], \JSON_UNESCAPED_UNICODE);
+        $body = json_encode(['alipay_trade_refund_response' => $data], \JSON_THROW_ON_ERROR);
 
         $mockResponse = new MockResponse($body);
         $client = new MockHttpClient($mockResponse);

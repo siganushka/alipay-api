@@ -49,7 +49,7 @@ final class OptionSet
 
                 if (is_file($publicKey)) {
                     $publicKeyContent = file_get_contents($publicKey);
-                    if (openssl_pkey_get_public($publicKeyContent)) {
+                    if (\is_string($publicKeyContent) && openssl_pkey_get_public($publicKeyContent)) {
                         return $publicKeyContent;
                     }
                 }
@@ -85,7 +85,7 @@ final class OptionSet
 
                 if (is_file($privateKey)) {
                     $privateKeyContent = file_get_contents($privateKey);
-                    if (openssl_pkey_get_private($privateKeyContent)) {
+                    if (\is_string($privateKeyContent) && openssl_pkey_get_private($privateKeyContent)) {
                         return $privateKeyContent;
                     }
                 }
