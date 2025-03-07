@@ -6,15 +6,13 @@ namespace Siganushka\ApiFactory\Alipay;
 
 use Siganushka\ApiFactory\ResolverInterface;
 use Siganushka\ApiFactory\ResolverTrait;
-use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @see https://opendocs.alipay.com/open/204/01dcc0
- * @see https://opendocs.alipay.com/apis/api_1/alipay.trade.app.pay
+ * @see https://opendocs.alipay.com/apis/api_1/alipay.trade.page.pay
  */
-class ParameterUtils implements ResolverInterface
+class PagePayUtils implements ResolverInterface
 {
     use ResolverTrait;
 
@@ -26,11 +24,11 @@ class ParameterUtils implements ResolverInterface
     }
 
     /**
-     * 生成 APP 支付参数.
+     * 生成网站支付参数.
      *
-     * @param array $options APP 支付参数选项
+     * @param array $options 网站支付参数
      */
-    public function app(array $options = []): string
+    public function params(array $options = []): array
     {
         $resolved = $this->resolve($options);
         $bizContent = array_filter([
@@ -38,41 +36,53 @@ class ParameterUtils implements ResolverInterface
             'total_amount' => $resolved['total_amount'],
             'subject' => $resolved['subject'],
             'product_code' => $resolved['product_code'],
-            'body' => $resolved['body'],
+            'qr_pay_mode' => $resolved['qr_pay_mode'],
+            'qrcode_width' => $resolved['qrcode_width'],
             'goods_detail' => $resolved['goods_detail'],
             'time_expire' => $resolved['time_expire'],
+            'sub_merchant' => $resolved['sub_merchant'],
             'extend_params' => $resolved['extend_params'],
-            'passback_params' => $resolved['passback_params'],
-            'agreement_sign_params' => $resolved['agreement_sign_params'],
-            'enable_pay_channels' => $resolved['enable_pay_channels'],
-            'specified_channel' => $resolved['specified_channel'],
-            'disable_pay_channels' => $resolved['disable_pay_channels'],
+            'business_params' => $resolved['business_params'],
+            'promo_params' => $resolved['promo_params'],
+            'integration_type' => $resolved['integration_type'],
+            'request_from_url' => $resolved['request_from_url'],
+            'store_id' => $resolved['store_id'],
             'merchant_order_no' => $resolved['merchant_order_no'],
             'ext_user_info' => $resolved['ext_user_info'],
-            'query_options' => $resolved['query_options'],
+            'invoice_info' => $resolved['invoice_info'],
         ], fn ($value) => null !== $value && [] !== $value);
 
-        $parameter = array_filter([
+        $query = array_filter([
             'app_id' => $resolved['appid'],
-            'method' => 'alipay.trade.app.pay',
+            'method' => 'alipay.trade.page.pay',
             'charset' => 'UTF-8',
             'sign_type' => $resolved['sign_type'],
             'timestamp' => date('Y-m-d H:i:s'),
             'version' => '1.0',
-            'notify_url' => $resolved['notify_url'],
-            'app_auth_token' => $resolved['app_auth_token'],
             'biz_content' => json_encode($bizContent),
         ], fn ($value) => null !== $value);
 
         // Generate signature
-        $parameter['sign'] = $this->signatureUtils->generate([
+        $query['sign'] = $this->signatureUtils->generate([
             'public_key' => $resolved['public_key'],
             'private_key' => $resolved['private_key'],
             'sign_type' => $resolved['sign_type'],
-            'data' => $parameter,
+            'data' => $query,
         ]);
 
-        return http_build_query($parameter);
+        return $query;
+    }
+
+    /**
+     * 生成网站支付收银台地址
+     *
+     * @param array $options 网站支付参数
+     */
+    public function url(array $options = []): string
+    {
+        $query = $this->params($options);
+
+        return \sprintf('https://openapi.alipay.com/gateway.do?%s', http_build_query($query));
     }
 
     protected function configureOptions(OptionsResolver $resolver): void
@@ -83,15 +93,15 @@ class ParameterUtils implements ResolverInterface
         OptionSet::sign_type($resolver);
 
         $resolver
-            ->define('notify_url')
-            ->default(null)
-            ->allowedTypes('null', 'string')
+            ->define('out_trade_no')
+            ->required()
+            ->allowedTypes('string')
         ;
 
         $resolver
-            ->define('app_auth_token')
-            ->default(null)
-            ->allowedTypes('null', 'string')
+            ->define('total_amount')
+            ->required()
+            ->allowedTypes('string')
         ;
 
         $resolver
@@ -101,45 +111,21 @@ class ParameterUtils implements ResolverInterface
         ;
 
         $resolver
-            ->define('out_trade_no')
-            ->required()
-            ->allowedTypes('string')
+            ->define('product_code')
+            ->default('FAST_INSTANT_TRADE_PAY')
+            ->allowedValues('FAST_INSTANT_TRADE_PAY')
         ;
 
         $resolver
-            ->define('total_amount')
+            ->define('qr_pay_mode')
             ->default(null)
-            ->allowedTypes('null', 'string')
-            ->normalize(function (Options $options, ?string $totalAmount) {
-                if (\is_string($totalAmount)) {
-                    return $totalAmount;
-                }
-
-                // 注意：格式化后不能出现逗号
-                if (\is_int($options['total_amount_as_cents'])) {
-                    return number_format($options['total_amount_as_cents'] / 100, 2, '.', '');
-                }
-
-                throw new MissingOptionsException('The required option "total_amount" is missing.');
-            })
+            ->allowedValues(null, 0, 1, 2, 3, 4)
         ;
 
         $resolver
-            ->define('total_amount_as_cents')
+            ->define('qrcode_width')
             ->default(null)
             ->allowedTypes('null', 'int')
-        ;
-
-        $resolver
-            ->define('product_code')
-            ->default(null)
-            ->allowedValues(null, 'QUICK_MSECURITY_PAY', 'CYCLE_PAY_AUTH')
-        ;
-
-        $resolver
-            ->define('body')
-            ->default(null)
-            ->allowedTypes('null', 'string')
         ;
 
         $resolver
@@ -156,44 +142,43 @@ class ParameterUtils implements ResolverInterface
         ;
 
         $resolver
+            ->define('sub_merchant')
+            ->default(null)
+            ->allowedTypes('null', 'array')
+        ;
+
+        $resolver
             ->define('extend_params')
             ->default(null)
             ->allowedTypes('null', 'array')
         ;
 
         $resolver
-            ->define('passback_params')
-            ->default(null)
-            ->allowedTypes('null', 'string')
-        ;
-
-        $resolver
-            ->define('agreement_sign_params')
+            ->define('business_params')
             ->default(null)
             ->allowedTypes('null', 'array')
-            ->normalize(function (Options $options, ?array $agreementSignParams) {
-                if ('CYCLE_PAY_AUTH' === $options['product_code'] && null === $agreementSignParams) {
-                    throw new MissingOptionsException('The required option "agreement_sign_params" is missing (when "product_code" option is set to "CYCLE_PAY_AUTH").');
-                }
-
-                return $agreementSignParams;
-            })
         ;
 
         $resolver
-            ->define('enable_pay_channels')
+            ->define('promo_params')
+            ->default(null)
+            ->allowedTypes('null', 'array')
+        ;
+
+        $resolver
+            ->define('integration_type')
+            ->default(null)
+            ->allowedValues(null, 'ALIAPP', 'PCWEB')
+        ;
+
+        $resolver
+            ->define('request_from_url')
             ->default(null)
             ->allowedTypes('null', 'string')
         ;
 
         $resolver
-            ->define('disable_pay_channels')
-            ->default(null)
-            ->allowedTypes('null', 'string')
-        ;
-
-        $resolver
-            ->define('specified_channel')
+            ->define('store_id')
             ->default(null)
             ->allowedTypes('null', 'string')
         ;
@@ -211,7 +196,7 @@ class ParameterUtils implements ResolverInterface
         ;
 
         $resolver
-            ->define('query_options')
+            ->define('invoice_info')
             ->default(null)
             ->allowedTypes('null', 'array')
         ;
