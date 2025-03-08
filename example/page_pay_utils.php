@@ -12,6 +12,7 @@ $options = [
     'total_amount' => '0.01',
     'subject' => '测试订单',
     // 'qr_pay_mode' => 2,
+    // 'notify_url' => 'http://localhost/xxx'
 ];
 
 $pagePayUtils = new PagePayUtils();

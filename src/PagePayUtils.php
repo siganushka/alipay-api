@@ -59,6 +59,7 @@ class PagePayUtils implements ResolverInterface
             'sign_type' => $resolved['sign_type'],
             'timestamp' => date('Y-m-d H:i:s'),
             'version' => '1.0',
+            'notify_url' => $resolved['notify_url'],
             'biz_content' => json_encode($bizContent),
         ], fn ($value) => null !== $value);
 
@@ -91,6 +92,12 @@ class PagePayUtils implements ResolverInterface
         OptionSet::public_key($resolver);
         OptionSet::private_key($resolver);
         OptionSet::sign_type($resolver);
+
+        $resolver
+            ->define('notify_url')
+            ->default(null)
+            ->allowedTypes('null', 'string')
+        ;
 
         $resolver
             ->define('out_trade_no')

@@ -44,6 +44,7 @@ class PagePayUtilsTest extends TestCase
             'merchant_order_no' => null,
             'ext_user_info' => null,
             'invoice_info' => null,
+            'notify_url' => null,
         ], $this->pagePayUtils->resolve([
             'appid' => 'test_appid',
             'public_key' => ConfigurationTest::PUBLIC_KEY,
@@ -77,6 +78,7 @@ class PagePayUtilsTest extends TestCase
             'merchant_order_no' => 'test_merchant_order_no',
             'ext_user_info' => ['test_ext_user_info'],
             'invoice_info' => ['test_invoice_info'],
+            'notify_url' => 'test_notify_url',
         ], $this->pagePayUtils->resolve([
             'appid' => 'test_appid',
             'public_key' => ConfigurationTest::PUBLIC_KEY,
@@ -100,6 +102,7 @@ class PagePayUtilsTest extends TestCase
             'merchant_order_no' => 'test_merchant_order_no',
             'ext_user_info' => ['test_ext_user_info'],
             'invoice_info' => ['test_invoice_info'],
+            'notify_url' => 'test_notify_url',
         ]));
     }
 
