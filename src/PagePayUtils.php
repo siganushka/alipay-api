@@ -60,6 +60,8 @@ class PagePayUtils implements ResolverInterface
             'timestamp' => date('Y-m-d H:i:s'),
             'version' => '1.0',
             'notify_url' => $resolved['notify_url'],
+            'return_url' => $resolved['return_url'],
+            'app_auth_token' => $resolved['app_auth_token'],
             'biz_content' => json_encode($bizContent),
         ], fn ($value) => null !== $value);
 
@@ -95,6 +97,18 @@ class PagePayUtils implements ResolverInterface
 
         $resolver
             ->define('notify_url')
+            ->default(null)
+            ->allowedTypes('null', 'string')
+        ;
+
+        $resolver
+            ->define('return_url')
+            ->default(null)
+            ->allowedTypes('null', 'string')
+        ;
+
+        $resolver
+            ->define('app_auth_token')
             ->default(null)
             ->allowedTypes('null', 'string')
         ;

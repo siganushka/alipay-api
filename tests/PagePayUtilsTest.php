@@ -45,6 +45,8 @@ class PagePayUtilsTest extends TestCase
             'ext_user_info' => null,
             'invoice_info' => null,
             'notify_url' => null,
+            'return_url' => null,
+            'app_auth_token' => null,
         ], $this->pagePayUtils->resolve([
             'appid' => 'test_appid',
             'public_key' => ConfigurationTest::PUBLIC_KEY,
@@ -79,6 +81,8 @@ class PagePayUtilsTest extends TestCase
             'ext_user_info' => ['test_ext_user_info'],
             'invoice_info' => ['test_invoice_info'],
             'notify_url' => 'test_notify_url',
+            'return_url' => 'test_return_url',
+            'app_auth_token' => 'test_app_auth_token',
         ], $this->pagePayUtils->resolve([
             'appid' => 'test_appid',
             'public_key' => ConfigurationTest::PUBLIC_KEY,
@@ -103,6 +107,8 @@ class PagePayUtilsTest extends TestCase
             'ext_user_info' => ['test_ext_user_info'],
             'invoice_info' => ['test_invoice_info'],
             'notify_url' => 'test_notify_url',
+            'return_url' => 'test_return_url',
+            'app_auth_token' => 'test_app_auth_token',
         ]));
     }
 
