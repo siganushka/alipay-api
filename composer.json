@@ -13,7 +13,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "siganushka/api-factory": "dev-main"
+        "siganushka/api-factory": "dev-main",
+        "symfony/http-foundation": "^5.4|^6.0|^7.0"
     },
     "require-dev": {
         "symfony/error-handler": "^5.4|^6.0|^7.0"
