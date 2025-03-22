@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-// appid 支付宝应用帐号
-// public_key 支付宝公钥（注意此处是支付宝的公钥，不是应用的公钥）
-// private_key 应用私钥（注意此处是应用的私钥）
+// appid 应用 ID
+// app_private_key 应用私钥（注意此处是应用的私钥）
+// alipay_public_key 支付宝公钥（注意此处是支付宝的公钥）
 
 return [
     'appid' => 'your_appid',
-    'public_key' => 'your_public_key',
-    'private_key' => 'your_private_key',
+    'app_private_key' => 'your_app_private_key',
+    'alipay_public_key' => 'your_alipay_public_key',
 ];

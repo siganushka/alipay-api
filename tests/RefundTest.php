@@ -27,16 +27,16 @@ class RefundTest extends TestCase
     {
         $options = [
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
             'refund_amount' => '0.01',
         ];
 
         static::assertEquals([
             'appid' => $options['appid'],
-            'public_key' => file_get_contents($options['public_key']),
-            'private_key' => file_get_contents($options['private_key']),
+            'alipay_public_key' => file_get_contents($options['alipay_public_key']),
+            'app_private_key' => file_get_contents($options['app_private_key']),
             'sign_type' => 'RSA2',
             'app_auth_token' => null,
             'trade_no' => $options['trade_no'],
@@ -52,8 +52,8 @@ class RefundTest extends TestCase
         unset($options['refund_amount']);
         static::assertEquals([
             'appid' => $options['appid'],
-            'public_key' => file_get_contents($options['public_key']),
-            'private_key' => file_get_contents($options['private_key']),
+            'alipay_public_key' => file_get_contents($options['alipay_public_key']),
+            'app_private_key' => file_get_contents($options['app_private_key']),
             'sign_type' => 'RSA',
             'app_auth_token' => 'test_app_auth_token',
             'trade_no' => $options['trade_no'],
@@ -80,8 +80,8 @@ class RefundTest extends TestCase
     {
         $options = [
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
             'refund_amount' => '0.01',
         ];
@@ -103,10 +103,9 @@ class RefundTest extends TestCase
         $signature = $query['sign'];
         unset($query['sign']);
 
-        static::assertTrue($this->signatureUtils->verify($signature, [
-            'public_key' => $options['public_key'],
-            'private_key' => $options['private_key'],
-            'data' => $query,
+        static::assertTrue($this->signatureUtils->verify($signature, $query, [
+            'alipay_public_key' => $options['alipay_public_key'],
+            'app_private_key' => $options['app_private_key'],
         ]));
 
         $bizContent = json_decode($query['biz_content'], true);
@@ -128,11 +127,10 @@ class RefundTest extends TestCase
         $signature = $query['sign'];
         unset($query['sign']);
 
-        static::assertTrue($this->signatureUtils->verify($signature, [
-            'public_key' => $options['public_key'],
-            'private_key' => $options['private_key'],
+        static::assertTrue($this->signatureUtils->verify($signature, $query, [
+            'alipay_public_key' => $options['alipay_public_key'],
+            'app_private_key' => $options['app_private_key'],
             'sign_type' => 'RSA',
-            'data' => $query,
         ]));
 
         $bizContent = json_decode($query['biz_content'], true);
@@ -147,8 +145,8 @@ class RefundTest extends TestCase
     {
         $options = [
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
             'refund_amount' => '0.01',
         ];
@@ -175,8 +173,8 @@ class RefundTest extends TestCase
 
         $options = [
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
             'refund_amount' => '0.01',
         ];
@@ -202,8 +200,8 @@ class RefundTest extends TestCase
 
         $options = [
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
             'refund_amount' => '0.01',
         ];
@@ -229,8 +227,8 @@ class RefundTest extends TestCase
         $this->expectExceptionMessage('The required option "appid" is missing');
 
         $this->request->build([
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
             'refund_amount' => '0.01',
         ]);
@@ -239,11 +237,11 @@ class RefundTest extends TestCase
     public function testPublicKeyMissingOptionsException(): void
     {
         $this->expectException(MissingOptionsException::class);
-        $this->expectExceptionMessage('The required option "public_key" is missing');
+        $this->expectExceptionMessage('The required option "alipay_public_key" is missing');
 
         $this->request->build([
             'appid' => 'test_appid',
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
             'refund_amount' => '0.01',
         ]);
@@ -252,11 +250,11 @@ class RefundTest extends TestCase
     public function testPrivateKeyMissingOptionsException(): void
     {
         $this->expectException(MissingOptionsException::class);
-        $this->expectExceptionMessage('The required option "private_key" is missing');
+        $this->expectExceptionMessage('The required option "app_private_key" is missing');
 
         $this->request->build([
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
             'trade_no' => 'test_trade_no',
             'refund_amount' => '0.01',
         ]);
@@ -269,8 +267,8 @@ class RefundTest extends TestCase
 
         $this->request->build([
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'refund_amount' => '0.01',
         ]);
     }
@@ -282,8 +280,8 @@ class RefundTest extends TestCase
 
         $this->request->build([
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
         ]);
     }

@@ -24,13 +24,13 @@ class ConfigurationExtensionTest extends TestCase
     public function testConfigureOptions(): void
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefined(['appid', 'public_key', 'private_key']);
+        $resolver->setDefined(['appid', 'alipay_public_key', 'app_private_key']);
         $this->extension->configureOptions($resolver);
 
         static::assertEquals([
             'appid' => 'test_appid',
-            'public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
-            'private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
+            'alipay_public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
+            'app_private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
         ], $resolver->resolve());
     }
 

@@ -23,8 +23,8 @@ class ParameterUtilsTest extends TestCase
     {
         static::assertEquals([
             'appid' => 'test_appid',
-            'public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
-            'private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
+            'alipay_public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
+            'app_private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
             'sign_type' => 'RSA2',
             'notify_url' => null,
             'app_auth_token' => null,
@@ -47,8 +47,8 @@ class ParameterUtilsTest extends TestCase
             'query_options' => null,
         ], $this->parameterUtils->resolve([
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'subject' => 'test_subject',
             'out_trade_no' => 'test_out_trade_no',
             'total_amount' => 'test_total_amount',
@@ -57,8 +57,8 @@ class ParameterUtilsTest extends TestCase
         $dateTimeAsString = '2021-09-27 18:43:00';
         static::assertEquals([
             'appid' => 'test_appid',
-            'public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
-            'private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
+            'alipay_public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
+            'app_private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
             'sign_type' => 'RSA',
             'notify_url' => 'test_notify_url',
             'app_auth_token' => 'test_app_auth_token',
@@ -81,8 +81,8 @@ class ParameterUtilsTest extends TestCase
             'query_options' => ['test_query_options'],
         ], $this->parameterUtils->resolve([
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'sign_type' => 'RSA',
             'notify_url' => 'test_notify_url',
             'app_auth_token' => 'test_app_auth_token',
@@ -105,20 +105,20 @@ class ParameterUtilsTest extends TestCase
         ]));
     }
 
-    public function testAppParameter(): void
+    public function testApp(): void
     {
         $options = [
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'subject' => 'test_subject',
             'out_trade_no' => 'test_out_trade_no',
             'total_amount' => 'test_total_amount',
         ];
 
-        $parameter = $this->parameterUtils->app($options);
+        $data = $this->parameterUtils->app($options);
 
-        parse_str($parameter, $parsed);
+        parse_str($data, $parsed);
         static::assertSame('test_appid', $parsed['app_id']);
         static::assertSame('alipay.trade.app.pay', $parsed['method']);
         static::assertSame('UTF-8', $parsed['charset']);
@@ -141,11 +141,10 @@ class ParameterUtilsTest extends TestCase
         unset($parsed['sign']);
 
         $options = [
-            'public_key' => $options['public_key'],
-            'private_key' => $options['private_key'],
-            'data' => $parsed,
+            'alipay_public_key' => $options['alipay_public_key'],
+            'app_private_key' => $options['app_private_key'],
         ];
 
-        static::assertTrue($this->signatureUtils->verify($signature, $options));
+        static::assertTrue($this->signatureUtils->verify($signature, $parsed, $options));
     }
 }

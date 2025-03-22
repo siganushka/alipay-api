@@ -23,46 +23,10 @@ final class OptionSet
         ;
     }
 
-    public static function public_key(OptionsResolver $resolver): OptionConfigurator
+    public static function app_private_key(OptionsResolver $resolver): OptionConfigurator
     {
         return $resolver
-            ->define('public_key')
-            ->required()
-            ->allowedTypes('string')
-            ->normalize(function (Options $options, ?string $publicKey) {
-                if (null === $publicKey) {
-                    return $publicKey;
-                }
-
-                $publicKey = trim($publicKey);
-                if (openssl_pkey_get_public($publicKey)) {
-                    return $publicKey;
-                }
-
-                $publicKeyContent = "-----BEGIN PUBLIC KEY-----\n".
-                    wordwrap($publicKey, 64, "\n", true).
-                    "\n-----END PUBLIC KEY-----";
-
-                if (openssl_pkey_get_public($publicKeyContent)) {
-                    return $publicKeyContent;
-                }
-
-                if (is_file($publicKey)) {
-                    $publicKeyContent = file_get_contents($publicKey);
-                    if (\is_string($publicKeyContent) && openssl_pkey_get_public($publicKeyContent)) {
-                        return $publicKeyContent;
-                    }
-                }
-
-                throw new InvalidOptionsException('The option "public_key" is invalid.');
-            })
-        ;
-    }
-
-    public static function private_key(OptionsResolver $resolver): OptionConfigurator
-    {
-        return $resolver
-            ->define('private_key')
+            ->define('app_private_key')
             ->required()
             ->allowedTypes('string')
             ->normalize(function (Options $options, ?string $privateKey) {
@@ -90,7 +54,43 @@ final class OptionSet
                     }
                 }
 
-                throw new InvalidOptionsException('The option "private_key" is invalid.');
+                throw new InvalidOptionsException('The option "app_private_key" is invalid.');
+            })
+        ;
+    }
+
+    public static function alipay_public_key(OptionsResolver $resolver): OptionConfigurator
+    {
+        return $resolver
+            ->define('alipay_public_key')
+            ->required()
+            ->allowedTypes('string')
+            ->normalize(function (Options $options, ?string $publicKey) {
+                if (null === $publicKey) {
+                    return $publicKey;
+                }
+
+                $publicKey = trim($publicKey);
+                if (openssl_pkey_get_public($publicKey)) {
+                    return $publicKey;
+                }
+
+                $publicKeyContent = "-----BEGIN PUBLIC KEY-----\n".
+                    wordwrap($publicKey, 64, "\n", true).
+                    "\n-----END PUBLIC KEY-----";
+
+                if (openssl_pkey_get_public($publicKeyContent)) {
+                    return $publicKeyContent;
+                }
+
+                if (is_file($publicKey)) {
+                    $publicKeyContent = file_get_contents($publicKey);
+                    if (\is_string($publicKeyContent) && openssl_pkey_get_public($publicKeyContent)) {
+                        return $publicKeyContent;
+                    }
+                }
+
+                throw new InvalidOptionsException('The option "alipay_public_key" is invalid.');
             })
         ;
     }

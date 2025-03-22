@@ -66,11 +66,10 @@ class PagePayUtils implements ResolverInterface
         ], fn ($value) => null !== $value);
 
         // Generate signature
-        $query['sign'] = $this->signatureUtils->generate([
-            'public_key' => $resolved['public_key'],
-            'private_key' => $resolved['private_key'],
+        $query['sign'] = $this->signatureUtils->generate($query, [
+            'alipay_public_key' => $resolved['alipay_public_key'],
+            'app_private_key' => $resolved['app_private_key'],
             'sign_type' => $resolved['sign_type'],
-            'data' => $query,
         ]);
 
         return $query;
@@ -91,8 +90,8 @@ class PagePayUtils implements ResolverInterface
     protected function configureOptions(OptionsResolver $resolver): void
     {
         OptionSet::appid($resolver);
-        OptionSet::public_key($resolver);
-        OptionSet::private_key($resolver);
+        OptionSet::alipay_public_key($resolver);
+        OptionSet::app_private_key($resolver);
         OptionSet::sign_type($resolver);
 
         $resolver

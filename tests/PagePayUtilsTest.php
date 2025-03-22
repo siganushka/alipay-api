@@ -23,8 +23,8 @@ class PagePayUtilsTest extends TestCase
     {
         static::assertEquals([
             'appid' => 'test_appid',
-            'public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
-            'private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
+            'alipay_public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
+            'app_private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
             'sign_type' => 'RSA2',
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
@@ -49,8 +49,8 @@ class PagePayUtilsTest extends TestCase
             'app_auth_token' => null,
         ], $this->pagePayUtils->resolve([
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
             'total_amount' => 'test_total_amount',
@@ -59,8 +59,8 @@ class PagePayUtilsTest extends TestCase
         $dateTimeAsString = '2021-09-27 18:43:00';
         static::assertEquals([
             'appid' => 'test_appid',
-            'public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
-            'private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
+            'alipay_public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
+            'app_private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
             'sign_type' => 'RSA',
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
@@ -85,8 +85,8 @@ class PagePayUtilsTest extends TestCase
             'app_auth_token' => 'test_app_auth_token',
         ], $this->pagePayUtils->resolve([
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'sign_type' => 'RSA',
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
@@ -112,29 +112,29 @@ class PagePayUtilsTest extends TestCase
         ]));
     }
 
-    public function testAppParameter(): void
+    public function testApp(): void
     {
         $options = [
             'appid' => 'test_appid',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'subject' => 'test_subject',
             'out_trade_no' => 'test_out_trade_no',
             'total_amount' => 'test_total_amount',
         ];
 
-        $parameter = $this->pagePayUtils->params($options);
-        static::assertSame('test_appid', $parameter['app_id']);
-        static::assertSame('alipay.trade.page.pay', $parameter['method']);
-        static::assertSame('UTF-8', $parameter['charset']);
-        static::assertSame('RSA2', $parameter['sign_type']);
-        static::assertSame('1.0', $parameter['version']);
-        static::assertArrayHasKey('timestamp', $parameter);
-        static::assertArrayHasKey('biz_content', $parameter);
-        static::assertArrayHasKey('sign', $parameter);
+        $data = $this->pagePayUtils->params($options);
+        static::assertSame('test_appid', $data['app_id']);
+        static::assertSame('alipay.trade.page.pay', $data['method']);
+        static::assertSame('UTF-8', $data['charset']);
+        static::assertSame('RSA2', $data['sign_type']);
+        static::assertSame('1.0', $data['version']);
+        static::assertArrayHasKey('timestamp', $data);
+        static::assertArrayHasKey('biz_content', $data);
+        static::assertArrayHasKey('sign', $data);
 
         /** @var string */
-        $bizContent = $parameter['biz_content'];
+        $bizContent = $data['biz_content'];
         static::assertEquals([
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
@@ -143,15 +143,14 @@ class PagePayUtilsTest extends TestCase
         ], json_decode($bizContent, true));
 
         /** @var string */
-        $signature = $parameter['sign'];
-        unset($parameter['sign']);
+        $signature = $data['sign'];
+        unset($data['sign']);
 
         $options = [
-            'public_key' => $options['public_key'],
-            'private_key' => $options['private_key'],
-            'data' => $parameter,
+            'alipay_public_key' => $options['alipay_public_key'],
+            'app_private_key' => $options['app_private_key'],
         ];
 
-        static::assertTrue($this->signatureUtils->verify($signature, $options));
+        static::assertTrue($this->signatureUtils->verify($signature, $data, $options));
     }
 }

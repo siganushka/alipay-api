@@ -23,25 +23,21 @@ class SignatureUtilsTest extends TestCase
         $data = ['foo' => 'hello'];
         static::assertEquals([
             'sign_type' => 'RSA2',
-            'public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
-            'private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
-            'data' => $data,
+            'alipay_public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
+            'app_private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
         ], $this->signatureUtils->resolve([
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
-            'data' => $data,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
         ]));
 
         static::assertEquals([
             'sign_type' => 'RSA',
-            'public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
-            'private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
-            'data' => $data,
+            'alipay_public_key' => file_get_contents(ConfigurationTest::PUBLIC_KEY),
+            'app_private_key' => file_get_contents(ConfigurationTest::PRIVATE_KEY),
         ], $this->signatureUtils->resolve([
             'sign_type' => 'RSA',
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
-            'data' => $data,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
         ]));
     }
 
@@ -51,37 +47,34 @@ class SignatureUtilsTest extends TestCase
     public function testGenerateAndVerify(array $data, string $signType): void
     {
         $options = [
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'sign_type' => $signType,
-            'data' => $data,
         ];
 
-        $signature = $this->signatureUtils->generate($options);
-        static::assertTrue($this->signatureUtils->verify($signature, $options));
+        $signature = $this->signatureUtils->generate($data, $options);
+        static::assertTrue($this->signatureUtils->verify($signature, $data, $options));
     }
 
     public function testPublicKeyMissingOptionsException(): void
     {
         $this->expectException(MissingOptionsException::class);
-        $this->expectExceptionMessage('The required option "public_key" is missing');
+        $this->expectExceptionMessage('The required option "alipay_public_key" is missing');
 
         $data = ['foo' => 'hello'];
-        $this->signatureUtils->generate([
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
-            'data' => $data,
+        $this->signatureUtils->generate($data, [
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
         ]);
     }
 
     public function testPrivateKeyMissingOptionsException(): void
     {
         $this->expectException(MissingOptionsException::class);
-        $this->expectExceptionMessage('The required option "private_key" is missing');
+        $this->expectExceptionMessage('The required option "app_private_key" is missing');
 
         $data = ['foo' => 'hello'];
-        $this->signatureUtils->generate([
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'data' => $data,
+        $this->signatureUtils->generate($data, [
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
         ]);
     }
 
@@ -91,11 +84,10 @@ class SignatureUtilsTest extends TestCase
         $this->expectExceptionMessage('The option "sign_type" with value "foo" is invalid. Accepted values are: "RSA", "RSA2"');
 
         $data = ['foo' => 'hello'];
-        $this->signatureUtils->generate([
-            'public_key' => ConfigurationTest::PUBLIC_KEY,
-            'private_key' => ConfigurationTest::PRIVATE_KEY,
+        $this->signatureUtils->generate($data, [
+            'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
+            'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'sign_type' => 'foo',
-            'data' => $data,
         ]);
     }
 

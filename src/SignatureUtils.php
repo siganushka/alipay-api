@@ -18,27 +18,27 @@ class SignatureUtils implements ResolverInterface
     /**
      * 生成数据签名.
      *
-     * @param array $options 数据签名选项
+     * @param array $data    待签名数据
+     * @param array $options 自定义选项
      *
-     * @return string 数据签名
-     *
+     * @return string            数据签名
      * @throws \RuntimeException 生成数据签名失败
      */
-    public function generate(array $options = []): string
+    public function generate(array $data, array $options = []): string
     {
         $resolved = $this->resolve($options);
-        $rawData = $resolved['data'];
 
-        ksort($rawData);
-        $data = http_build_query($rawData);
-        $data = urldecode($data);
+        ksort($data);
+
+        $stringToSignature = http_build_query($data);
+        $stringToSignature = urldecode($stringToSignature);
 
         $algorithm = (OptionSet::SIGN_TYPE_RSA === $resolved['sign_type'])
             ? \OPENSSL_ALGO_SHA1
             : \OPENSSL_ALGO_SHA256;
 
         try {
-            $result = openssl_sign($data, $rawSignature, $resolved['private_key'], $algorithm);
+            $result = openssl_sign($stringToSignature, $rawSignature, $resolved['app_private_key'], $algorithm);
         } catch (\Throwable $th) {
             throw new \RuntimeException('Unable to generate signature.', 0, $th);
         }
@@ -54,18 +54,19 @@ class SignatureUtils implements ResolverInterface
      * 验证数据签名.
      *
      * @param string $signature 数据签名
-     * @param array  $options   数据签名选项（注意 data 不包含签名）
+     * @param array  $data      原始签名数据（不包含 sign 字段）
+     * @param array  $options   自定义选项
      *
      * @return bool 数据签名是否有效
      */
-    public function verify(string $signature, array $options = []): bool
+    public function verify(string $signature, array $data, array $options = []): bool
     {
         $resolved = $this->resolve($options);
-        $rawData = $resolved['data'];
 
-        ksort($rawData);
-        $data = http_build_query($rawData);
-        $data = urldecode($data);
+        ksort($data);
+
+        $stringToSignature = http_build_query($data);
+        $stringToSignature = urldecode($stringToSignature);
 
         $rawSignature = base64_decode($signature);
         if (!$rawSignature) {
@@ -77,8 +78,8 @@ class SignatureUtils implements ResolverInterface
             : \OPENSSL_ALGO_SHA256;
 
         try {
-            $result = openssl_verify($data, $rawSignature, $resolved['public_key'], $algorithm);
-        } catch (\Throwable $th) {
+            $result = openssl_verify($stringToSignature, $rawSignature, $resolved['alipay_public_key'], $algorithm);
+        } catch (\Throwable) {
             return false;
         }
 
@@ -87,14 +88,8 @@ class SignatureUtils implements ResolverInterface
 
     protected function configureOptions(OptionsResolver $resolver): void
     {
-        OptionSet::public_key($resolver);
-        OptionSet::private_key($resolver);
+        OptionSet::alipay_public_key($resolver);
+        OptionSet::app_private_key($resolver);
         OptionSet::sign_type($resolver);
-
-        $resolver
-            ->define('data')
-            ->required()
-            ->allowedTypes('array')
-        ;
     }
 }
