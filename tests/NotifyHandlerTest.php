@@ -81,7 +81,7 @@ class NotifyHandlerTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Invalid Request');
 
-        $request = Request::create('/', content: 'foo');
+        $request = Request::create('/', 'POST', [], [], [], [], 'foo');
 
         $this->notifyHandler->handle($request);
     }
