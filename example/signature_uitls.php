@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use Siganushka\ApiFactory\Alipay\ConfigurationExtension;
 use Siganushka\ApiFactory\Alipay\SignatureUtils;
 
 require __DIR__.'/_autoload.php';
 
 $signatureUtils = new SignatureUtils();
-$signatureUtils->extend(new ConfigurationExtension($configuration));
+$signatureUtils->extend($configurationExtension);
 
 /**
  * 一、根据请求的原始数据生成签名（注意，生成签名使用的是“应用私钥”）.

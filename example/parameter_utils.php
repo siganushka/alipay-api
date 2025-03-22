@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use Siganushka\ApiFactory\Alipay\ConfigurationExtension;
 use Siganushka\ApiFactory\Alipay\ParameterUtils;
 
 require __DIR__.'/_autoload.php';
 
 $parameterUtils = new ParameterUtils();
-$parameterUtils->extend(new ConfigurationExtension($configuration));
+$parameterUtils->extend($configurationExtension);
 
 $options = [
     'subject' => '测试订单',

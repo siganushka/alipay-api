@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Siganushka\ApiFactory\Alipay\ConfigurationExtension;
 use Siganushka\ApiFactory\Alipay\PagePayUtils;
 
 require __DIR__.'/_autoload.php';
@@ -16,7 +15,7 @@ $options = [
 ];
 
 $pagePayUtils = new PagePayUtils();
-$pagePayUtils->extend(new ConfigurationExtension($configuration));
+$pagePayUtils->extend($configurationExtension);
 
 // 生成网站扫码支付参数
 // $result = $pagePayUtils->params($options);
