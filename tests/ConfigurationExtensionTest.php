@@ -24,6 +24,7 @@ class ConfigurationExtensionTest extends TestCase
     public function testConfigureOptions(): void
     {
         $resolver = new OptionsResolver();
+        $resolver->setDefined(['appid', 'public_key', 'private_key']);
         $this->extension->configureOptions($resolver);
 
         static::assertEquals([
