@@ -34,8 +34,7 @@ class NotifyHandlerTest extends TestCase
         // Generate signature
         $notifyData['sign'] = $this->signatureUtils->generate($notifyData, $options);
 
-        $content = json_encode($notifyData, \JSON_THROW_ON_ERROR);
-        $request = Request::create('/', 'POST', [], [], [], [], $content);
+        $request = Request::create('/', 'POST', $notifyData);
 
         $data = $this->notifyHandler->handle($request, $options);
         static::assertSame($notifyData, $data);
@@ -74,15 +73,5 @@ class NotifyHandlerTest extends TestCase
         ]);
 
         static::assertSame($notifyData, $data);
-    }
-
-    public function testHandleWithEmptyContentException(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Invalid Request');
-
-        $request = Request::create('/', 'POST', [], [], [], [], 'foo');
-
-        $this->notifyHandler->handle($request);
     }
 }
