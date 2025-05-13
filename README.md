@@ -1,6 +1,6 @@
 # Alipay API
 
-支付宝支付相关接口实现，基于 [siganushka/api-factory](https://github.com/siganushka/api-factory) 抽象层，可快速实现相关业务。
+支付宝支付相关接口实现，基于 [siganushka/api-factory](https://github.com/siganushka/api-factory) 抽象层，可快速实现业务。
 
 ### 安装
 
@@ -25,12 +25,12 @@ $ composer require siganushka/alipay-api
 
 ### 框架集成
 
-该 SDK 包已集成至 `siganushka/api-factory-bundle`，适用于 `Symfony` 框架，以上所有示例将以服务的形式在框架中使用。
+`Symfony` 项目已集成至 [siganushka/api-factory-bundle](https://github.com/siganushka/api-factory-bundle)，将以服务的形式使用。
 
 安装
 
 ```bash
-$ composer require siganushka/api-factory-bundle siganushka/alipay-api dev-main
+$ composer require siganushka/alipay-api siganushka/api-factory-bundle
 ```
 
 配置
@@ -40,9 +40,9 @@ $ composer require siganushka/api-factory-bundle siganushka/alipay-api dev-main
 
 siganushka_api_factory:
   alipay:
-    appid: your_appid
-    public_key: your_public_key
-    private_key: your_private_key
+    appid: your_appid 					# 应用 ID
+    app_private_key: your_public_key 	# 应用私钥（注意此处是应用的私钥）
+    alipay_public_key: your_private_key # 支付宝公钥（注意此处是支付宝的公钥）
 ```
 
 使用
@@ -55,7 +55,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DefaultController extends AbstractController
 {
-    public function index(ParameterUtils $parameterUtils)
+    public function index(ParameterUtils $utils)
     {
         $options = [
             'subject' => '测试订单',
@@ -63,14 +63,14 @@ class DefaultController extends AbstractController
             'total_amount' => '0.01',
         ];
 
-        $parameter = $parameterUtils->app($options);
+        $parameter = $utils->app($options);
         var_dump($parameter);
     }
 }
 ```
 
-查看所有可用服务
+查看所有服务
 
 ```bash
-$ php bin/console debug:container Siganushka\ApiFactory\Alipay
+$ php bin/console debug:container Siganushka\\ApiFactory\\Alipay
 ```
