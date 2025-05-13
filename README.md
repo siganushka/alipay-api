@@ -1,6 +1,6 @@
 # Alipay API
 
-基于 [siganushka/api-factory](https://github.com/siganushka/api-factory) 抽象层的支付宝支付相关接口实现。
+支付宝支付相关接口实现，基于 [siganushka/api-factory](https://github.com/siganushka/api-factory) 抽象层，可快速实现相关业务。
 
 ### 安装
 
