@@ -41,8 +41,8 @@ $ composer require siganushka/alipay-api siganushka/api-factory-bundle
 siganushka_api_factory:
   alipay:
     appid: your_appid                   # 应用 ID
-    app_private_key: your_public_key    # 应用私钥（注意此处是应用的私钥）
-    alipay_public_key: your_private_key # 支付宝公钥（注意此处是支付宝的公钥）
+    app_private_key: your_private_key   # 应用私钥（注意这里是应用的私钥，与 alipay_public_key 不是一对）
+    alipay_public_key: your_public_key  # 支付宝公钥（注意这里是支付宝的公钥，与 app_private_key 不是一对）
 ```
 
 使用
@@ -58,7 +58,7 @@ class DefaultController extends AbstractController
     public function index(ParameterUtils $utils)
     {
         $options = [
-            'subject' => '测试订单',
+            'subject' => 'APP 支付测试订单',
             'out_trade_no' => uniqid(),
             'total_amount' => '0.01',
         ];
