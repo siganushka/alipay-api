@@ -5,7 +5,7 @@
 ### 安装
 
 ```bash
-$ composer require siganushka/alipay-api dev-main
+$ composer require siganushka/alipay-api
 ```
 
 ### 使用
@@ -14,12 +14,14 @@ $ composer require siganushka/alipay-api dev-main
 
 该目录包含以下示例：
 
-| 文件 | 功能 |
-| ------------ | ------------ |
-| example/query.php | 支付宝订单查询 |
-| example/refund.php | 支付宝退款 |
-| example/parameter_utils.php | 生成支付宝支付参数 |
-| example/signature_uitls.php | 生成、验证支付签名 |
+| 文件                        | 功能                 |
+| --------------------------- | -------------------- |
+| example/query.php           | 支付宝订单查询       |
+| example/refund.php          | 支付宝退款           |
+| example/parameter_utils.php | 生成支付宝支付参数   |
+| example/signature_uitls.php | 生成、验证支付签名   |
+| example/page_pay_utils.php  | 生成网站扫码支付参数 |
+| example/notify.php          | 支付异步通知         |
 
 ### 框架集成
 
@@ -37,10 +39,10 @@ $ composer require siganushka/api-factory-bundle siganushka/alipay-api dev-main
 # config/packages/siganushka_api_factory.yaml
 
 siganushka_api_factory:
-    alipay:
-        appid: your_appid
-        public_key: your_public_key
-        private_key: your_private_key
+  alipay:
+    appid: your_appid
+    public_key: your_public_key
+    private_key: your_private_key
 ```
 
 使用
