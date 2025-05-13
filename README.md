@@ -40,9 +40,9 @@ $ composer require siganushka/alipay-api siganushka/api-factory-bundle
 
 siganushka_api_factory:
     alipay:
-        appid: your_appid                   # 应用 ID
-        app_private_key: your_private_key   # 应用私钥（注意是应用的私钥，与 alipay_public_key 不是一对）
-        alipay_public_key: your_public_key  # 支付宝公钥（注意是支付宝的公钥，与 app_private_key 不是一对）
+        appid: your_appid                       # 应用 ID
+        app_private_key: app_private_key        # 应用私钥（注意是应用的私钥）
+        alipay_public_key: alipay_public_key    # 支付宝公钥（注意是支付宝的公钥）
 ```
 
 使用
