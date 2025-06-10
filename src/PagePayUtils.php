@@ -93,6 +93,7 @@ class PagePayUtils implements ResolverInterface
         OptionSet::alipay_public_key($resolver);
         OptionSet::app_private_key($resolver);
         OptionSet::sign_type($resolver);
+        OptionSet::app_auth_token($resolver);
 
         $resolver
             ->define('notify_url')
@@ -102,12 +103,6 @@ class PagePayUtils implements ResolverInterface
 
         $resolver
             ->define('return_url')
-            ->default(null)
-            ->allowedTypes('null', 'string')
-        ;
-
-        $resolver
-            ->define('app_auth_token')
             ->default(null)
             ->allowedTypes('null', 'string')
         ;

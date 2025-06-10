@@ -4,46 +4,19 @@ declare(strict_types=1);
 
 namespace Siganushka\ApiFactory\Alipay;
 
-use Siganushka\ApiFactory\AbstractRequest;
-use Siganushka\ApiFactory\Exception\ParseResponseException;
-use Siganushka\ApiFactory\RequestOptions;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
- * @extends AbstractRequest<array>
+ * @see https://opendocs.alipay.com/apis/api_1/alipay.trade.refund
  */
-class Refund extends AbstractRequest
+class Refund extends AbstractAlipayRequest
 {
-    /**
-     * @see https://opendocs.alipay.com/apis/api_1/alipay.trade.refund
-     */
-    public const URL = 'https://openapi.alipay.com/gateway.do';
-
-    private readonly SignatureUtils $signatureUtils;
-
-    public function __construct(?HttpClientInterface $httpClient = null, ?SignatureUtils $signatureUtils = null)
-    {
-        $this->signatureUtils = $signatureUtils ?? new SignatureUtils();
-
-        parent::__construct($httpClient);
-    }
-
     protected function configureOptions(OptionsResolver $resolver): void
     {
-        OptionSet::appid($resolver);
-        OptionSet::alipay_public_key($resolver);
-        OptionSet::app_private_key($resolver);
-        OptionSet::sign_type($resolver);
-
-        $resolver
-            ->define('app_auth_token')
-            ->default(null)
-            ->allowedTypes('null', 'string')
-        ;
+        parent::configureOptions($resolver);
 
         $resolver
             ->define('trade_no')
@@ -113,55 +86,26 @@ class Refund extends AbstractRequest
         ;
     }
 
-    protected function configureRequest(RequestOptions $request, array $options): void
+    protected function getMethodName(): string
     {
-        $bizContent = array_filter([
-            'trade_no' => $options['trade_no'],
-            'out_trade_no' => $options['out_trade_no'],
-            'refund_amount' => $options['refund_amount'],
-            'refund_reason' => $options['refund_reason'],
-            'out_request_no' => $options['out_request_no'],
-            'refund_royalty_parameters' => $options['refund_royalty_parameters'],
-            'query_options' => $options['query_options'],
-        ], fn ($value) => null !== $value);
-
-        $query = array_filter([
-            'app_id' => $options['appid'],
-            'method' => 'alipay.trade.refund',
-            'charset' => 'UTF-8',
-            'sign_type' => $options['sign_type'],
-            'timestamp' => date('Y-m-d H:i:s'),
-            'version' => '1.0',
-            'app_auth_token' => $options['app_auth_token'],
-            'biz_content' => json_encode($bizContent),
-        ], fn ($value) => null !== $value);
-
-        // Generate signature
-        $query['sign'] = $this->signatureUtils->generate($query, [
-            'alipay_public_key' => $options['alipay_public_key'],
-            'app_private_key' => $options['app_private_key'],
-            'sign_type' => $options['sign_type'],
-        ]);
-
-        $request
-            ->setMethod('GET')
-            ->setUrl(static::URL)
-            ->setQuery($query)
-        ;
+        return 'alipay.trade.refund';
     }
 
-    protected function parseResponse(ResponseInterface $response): array
+    protected function getBizContent(array $options): array
     {
-        $result = $response->toArray();
+        return array_intersect_key($options, array_flip([
+            'trade_no',
+            'out_trade_no',
+            'refund_amount',
+            'refund_reason',
+            'out_request_no',
+            'refund_royalty_parameters',
+            'query_options',
+        ]));
+    }
 
-        $alipayResponse = (array) ($result['alipay_trade_refund_response'] ?? []);
-        if (isset($alipayResponse['code']) && '10000' === $alipayResponse['code']) {
-            return $alipayResponse;
-        }
-
-        $subCode = $alipayResponse['sub_code'] ?? ($alipayResponse['code'] ?? '00000');
-        $subMsg = $alipayResponse['sub_msg'] ?? ($alipayResponse['msg'] ?? 'error');
-
-        throw new ParseResponseException($response, \sprintf('%s (%s)', $subMsg, $subCode));
+    protected function parseRawResponse(ResponseInterface $response): array
+    {
+        return $response->toArray()['alipay_trade_refund_response'] ?? [];
     }
 }

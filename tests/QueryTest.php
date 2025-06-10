@@ -74,7 +74,7 @@ class QueryTest extends TestCase
 
         $requestOptions = $this->request->build($options);
         static::assertSame('GET', $requestOptions->getMethod());
-        static::assertSame(Query::URL, $requestOptions->getUrl());
+        static::assertSame('https://openapi.alipay.com/gateway.do', $requestOptions->getUrl());
 
         $query = $requestOptions->toArray()['query'];
         static::assertSame('test_appid', $query['app_id']);

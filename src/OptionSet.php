@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Siganushka\ApiFactory\Alipay;
 
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\OptionConfigurator;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,19 +13,19 @@ final class OptionSet
     public const SIGN_TYPE_RSA = 'RSA';
     public const SIGN_TYPE_RSA2 = 'RSA2';
 
-    public static function appid(OptionsResolver $resolver): OptionConfigurator
+    public static function appid(OptionsResolver $resolver): void
     {
-        return $resolver
-            ->define('appid')
+        $resolver
+            ->define(__FUNCTION__)
             ->required()
             ->allowedTypes('string')
         ;
     }
 
-    public static function app_private_key(OptionsResolver $resolver): OptionConfigurator
+    public static function app_private_key(OptionsResolver $resolver): void
     {
-        return $resolver
-            ->define('app_private_key')
+        $resolver
+            ->define(__FUNCTION__)
             ->required()
             ->allowedTypes('string')
             ->normalize(function (Options $options, ?string $privateKey) {
@@ -59,10 +58,10 @@ final class OptionSet
         ;
     }
 
-    public static function alipay_public_key(OptionsResolver $resolver): OptionConfigurator
+    public static function alipay_public_key(OptionsResolver $resolver): void
     {
-        return $resolver
-            ->define('alipay_public_key')
+        $resolver
+            ->define(__FUNCTION__)
             ->required()
             ->allowedTypes('string')
             ->normalize(function (Options $options, ?string $publicKey) {
@@ -95,12 +94,21 @@ final class OptionSet
         ;
     }
 
-    public static function sign_type(OptionsResolver $resolver): OptionConfigurator
+    public static function sign_type(OptionsResolver $resolver): void
     {
-        return $resolver
-            ->define('sign_type')
-            ->default(static::SIGN_TYPE_RSA2)
-            ->allowedValues(static::SIGN_TYPE_RSA, static::SIGN_TYPE_RSA2)
+        $resolver
+            ->define(__FUNCTION__)
+            ->default(self::SIGN_TYPE_RSA2)
+            ->allowedValues(self::SIGN_TYPE_RSA, self::SIGN_TYPE_RSA2)
+        ;
+    }
+
+    public static function app_auth_token(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->define(__FUNCTION__)
+            ->default(null)
+            ->allowedTypes('null', 'string')
         ;
     }
 }
