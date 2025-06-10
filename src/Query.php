@@ -23,7 +23,7 @@ class Query extends AbstractRequest
      */
     public const URL = 'https://openapi.alipay.com/gateway.do';
 
-    private SignatureUtils $signatureUtils;
+    private readonly SignatureUtils $signatureUtils;
 
     public function __construct(?HttpClientInterface $httpClient = null, ?SignatureUtils $signatureUtils = null)
     {

@@ -17,7 +17,7 @@ class NotifyHandler implements ResolverInterface
 {
     use ResolverTrait;
 
-    private SignatureUtils $signatureUtils;
+    private readonly SignatureUtils $signatureUtils;
 
     public function __construct(?SignatureUtils $signatureUtils = null)
     {
