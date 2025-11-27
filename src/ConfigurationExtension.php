@@ -24,8 +24,10 @@ class ConfigurationExtension implements ResolverExtensionInterface
     public static function getExtendedClasses(): iterable
     {
         return [
+            NotifyHandler::class,
             Query::class,
             Refund::class,
+            PagePayUtils::class,
             ParameterUtils::class,
             SignatureUtils::class,
         ];

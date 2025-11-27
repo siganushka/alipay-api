@@ -6,6 +6,8 @@ namespace Siganushka\ApiFactory\Alipay\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Siganushka\ApiFactory\Alipay\ConfigurationExtension;
+use Siganushka\ApiFactory\Alipay\NotifyHandler;
+use Siganushka\ApiFactory\Alipay\PagePayUtils;
 use Siganushka\ApiFactory\Alipay\ParameterUtils;
 use Siganushka\ApiFactory\Alipay\Query;
 use Siganushka\ApiFactory\Alipay\Refund;
@@ -37,8 +39,10 @@ class ConfigurationExtensionTest extends TestCase
     public function testGetExtendedClasses(): void
     {
         static::assertEquals([
+            NotifyHandler::class,
             Query::class,
             Refund::class,
+            PagePayUtils::class,
             ParameterUtils::class,
             SignatureUtils::class,
         ], ConfigurationExtension::getExtendedClasses());
