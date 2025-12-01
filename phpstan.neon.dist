@@ -8,3 +8,4 @@ parameters:
     ignoreErrors:
         - '#no value type specified in iterable type array#'
         - '#no value type specified in iterable type iterable#'
+        - { message: '#is not subtype of native type#', path: tests/ConfigurationTest.php }
