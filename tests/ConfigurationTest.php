@@ -31,7 +31,6 @@ class ConfigurationTest extends TestCase
 
     public function testPublicKeyAsString(): void
     {
-        /** @var array{ alipay_public_key: string } */
         $configuration = static::create([
             'appid' => 'test_appid',
             'app_private_key' => static::PRIVATE_KEY,
@@ -48,7 +47,6 @@ ciuSZgZmuT7HtoNRGQIDAQAB',
 
     public function testPrivateKeyAsString(): void
     {
-        /** @var array{ app_private_key: string } */
         $configuration = static::create([
             'appid' => 'test_appid',
             'app_private_key' => '
