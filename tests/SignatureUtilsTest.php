@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\ApiFactory\Alipay\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Siganushka\ApiFactory\Alipay\SignatureUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -41,9 +42,7 @@ class SignatureUtilsTest extends TestCase
         ]));
     }
 
-    /**
-     * @dataProvider getSignatureProvider
-     */
+    #[DataProvider('getSignatureProvider')]
     public function testGenerateAndVerify(array $data, string $signType): void
     {
         $options = [
@@ -91,17 +90,9 @@ class SignatureUtilsTest extends TestCase
         ]);
     }
 
-    public function getSignatureProvider(): array
+    public static function getSignatureProvider(): iterable
     {
-        return [
-            [
-                ['foo' => 'hello'],
-                'RSA',
-            ],
-            [
-                ['bar' => 'world'],
-                'RSA2',
-            ],
-        ];
+        yield [['foo' => 'hello'], 'RSA'];
+        yield [['bar' => 'world'], 'RSA2'];
     }
 }
