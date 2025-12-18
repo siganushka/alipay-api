@@ -6,6 +6,7 @@ namespace Siganushka\ApiFactory\Alipay;
 
 use Siganushka\ApiFactory\ResolverInterface;
 use Siganushka\ApiFactory\ResolverTrait;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -115,8 +116,26 @@ class PagePayUtils implements ResolverInterface
 
         $resolver
             ->define('total_amount')
-            ->required()
-            ->allowedTypes('string')
+            ->default(null)
+            ->allowedTypes('null', 'string')
+            ->normalize(function (Options $options, ?string $totalAmount) {
+                if (\is_string($totalAmount)) {
+                    return $totalAmount;
+                }
+
+                // 注意：格式化后不能出现逗号
+                if (\is_int($options['total_amount_as_cents'])) {
+                    return number_format($options['total_amount_as_cents'] / 100, 2, thousands_separator: '');
+                }
+
+                throw new MissingOptionsException('The required option "total_amount" is missing.');
+            })
+        ;
+
+        $resolver
+            ->define('total_amount_as_cents')
+            ->default(null)
+            ->allowedTypes('null', 'int')
         ;
 
         $resolver

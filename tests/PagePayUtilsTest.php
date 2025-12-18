@@ -28,7 +28,8 @@ class PagePayUtilsTest extends TestCase
             'sign_type' => 'RSA2',
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
-            'total_amount' => 'test_total_amount',
+            'total_amount' => '314159.26',
+            'total_amount_as_cents' => null,
             'product_code' => 'FAST_INSTANT_TRADE_PAY',
             'qr_pay_mode' => null,
             'qrcode_width' => null,
@@ -53,7 +54,7 @@ class PagePayUtilsTest extends TestCase
             'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
-            'total_amount' => 'test_total_amount',
+            'total_amount' => '314159.26',
         ]));
 
         $dateTimeAsString = '2021-09-27 18:43:00';
@@ -64,7 +65,8 @@ class PagePayUtilsTest extends TestCase
             'sign_type' => 'RSA',
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
-            'total_amount' => 'test_total_amount',
+            'total_amount' => '314159.26',
+            'total_amount_as_cents' => 31415926,
             'product_code' => 'FAST_INSTANT_TRADE_PAY',
             'qr_pay_mode' => 4,
             'qrcode_width' => 15,
@@ -90,7 +92,7 @@ class PagePayUtilsTest extends TestCase
             'sign_type' => 'RSA',
             'out_trade_no' => 'test_out_trade_no',
             'subject' => 'test_subject',
-            'total_amount' => 'test_total_amount',
+            'total_amount_as_cents' => 31415926,
             'product_code' => 'FAST_INSTANT_TRADE_PAY',
             'qr_pay_mode' => 4,
             'qrcode_width' => 15,

@@ -30,7 +30,7 @@ class ParameterUtilsTest extends TestCase
             'app_auth_token' => null,
             'subject' => 'test_subject',
             'out_trade_no' => 'test_out_trade_no',
-            'total_amount' => 'test_total_amount',
+            'total_amount' => '314159.26',
             'total_amount_as_cents' => null,
             'product_code' => null,
             'body' => null,
@@ -51,7 +51,7 @@ class ParameterUtilsTest extends TestCase
             'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'subject' => 'test_subject',
             'out_trade_no' => 'test_out_trade_no',
-            'total_amount' => 'test_total_amount',
+            'total_amount' => '314159.26',
         ]));
 
         $dateTimeAsString = '2021-09-27 18:43:00';
@@ -64,8 +64,8 @@ class ParameterUtilsTest extends TestCase
             'app_auth_token' => 'test_app_auth_token',
             'subject' => 'test_subject',
             'out_trade_no' => 'test_out_trade_no',
-            'total_amount' => '0.12',
-            'total_amount_as_cents' => 12,
+            'total_amount' => '314159.26',
+            'total_amount_as_cents' => 31415926,
             'product_code' => 'CYCLE_PAY_AUTH',
             'body' => 'test_body',
             'goods_detail' => ['test_goods_detail'],
@@ -88,7 +88,7 @@ class ParameterUtilsTest extends TestCase
             'app_auth_token' => 'test_app_auth_token',
             'subject' => 'test_subject',
             'out_trade_no' => 'test_out_trade_no',
-            'total_amount_as_cents' => 12,
+            'total_amount_as_cents' => 31415926,
             'product_code' => 'CYCLE_PAY_AUTH',
             'body' => 'test_body',
             'goods_detail' => ['test_goods_detail'],

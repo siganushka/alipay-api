@@ -30,7 +30,7 @@ class RefundTest extends TestCase
             'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
             'app_private_key' => ConfigurationTest::PRIVATE_KEY,
             'trade_no' => 'test_trade_no',
-            'refund_amount' => '0.01',
+            'refund_amount' => '314159.26',
         ];
 
         static::assertEquals([
@@ -41,7 +41,7 @@ class RefundTest extends TestCase
             'app_auth_token' => null,
             'trade_no' => $options['trade_no'],
             'out_trade_no' => null,
-            'refund_amount' => '0.01',
+            'refund_amount' => '314159.26',
             'refund_amount_as_cents' => null,
             'refund_reason' => null,
             'out_request_no' => null,
@@ -58,8 +58,8 @@ class RefundTest extends TestCase
             'app_auth_token' => 'test_app_auth_token',
             'trade_no' => $options['trade_no'],
             'out_trade_no' => 'test_out_trade_no',
-            'refund_amount' => '0.12',
-            'refund_amount_as_cents' => 12,
+            'refund_amount' => '314159.26',
+            'refund_amount_as_cents' => 31415926,
             'refund_reason' => 'test_refund_reason',
             'out_request_no' => 'test_out_request_no',
             'refund_royalty_parameters' => ['test_refund_royalty_parameters'],
@@ -68,7 +68,7 @@ class RefundTest extends TestCase
             'sign_type' => 'RSA',
             'app_auth_token' => 'test_app_auth_token',
             'out_trade_no' => 'test_out_trade_no',
-            'refund_amount_as_cents' => 12,
+            'refund_amount_as_cents' => 31415926,
             'refund_reason' => 'test_refund_reason',
             'out_request_no' => 'test_out_request_no',
             'refund_royalty_parameters' => ['test_refund_royalty_parameters'],
@@ -118,7 +118,7 @@ class RefundTest extends TestCase
         $requestOptions = $this->request->build($options + [
             'sign_type' => 'RSA',
             'out_trade_no' => 'test_out_trade_no',
-            'refund_amount_as_cents' => 12,
+            'refund_amount_as_cents' => 31415926,
         ]);
 
         $query = $requestOptions->toArray()['query'];
@@ -137,7 +137,7 @@ class RefundTest extends TestCase
         static::assertEquals([
             'trade_no' => $options['trade_no'],
             'out_trade_no' => 'test_out_trade_no',
-            'refund_amount' => '0.12',
+            'refund_amount' => '314159.26',
         ], $bizContent);
     }
 

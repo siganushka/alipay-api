@@ -48,7 +48,7 @@ class Refund extends AbstractAlipayRequest
 
                 // 注意：格式化后不能出现逗号
                 if (\is_int($options['refund_amount_as_cents'])) {
-                    return number_format($options['refund_amount_as_cents'] / 100, 2, '.', '');
+                    return number_format($options['refund_amount_as_cents'] / 100, 2, thousands_separator: '');
                 }
 
                 throw new MissingOptionsException('The required option "refund_amount" is missing.');
