@@ -28,7 +28,7 @@ final class OptionSet
             ->define(__FUNCTION__)
             ->required()
             ->allowedTypes('string')
-            ->normalize(function (Options $options, ?string $privateKey) {
+            ->normalize(static function (Options $options, ?string $privateKey) {
                 if (null === $privateKey) {
                     return $privateKey;
                 }
@@ -64,7 +64,7 @@ final class OptionSet
             ->define(__FUNCTION__)
             ->required()
             ->allowedTypes('string')
-            ->normalize(function (Options $options, ?string $publicKey) {
+            ->normalize(static function (Options $options, ?string $publicKey) {
                 if (null === $publicKey) {
                     return $publicKey;
                 }

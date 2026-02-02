@@ -51,7 +51,7 @@ class PagePayUtils implements ResolverInterface
             'merchant_order_no' => $resolved['merchant_order_no'],
             'ext_user_info' => $resolved['ext_user_info'],
             'invoice_info' => $resolved['invoice_info'],
-        ], fn ($value) => null !== $value && [] !== $value);
+        ], static fn ($value) => null !== $value && [] !== $value);
 
         $query = array_filter([
             'app_id' => $resolved['appid'],
@@ -64,7 +64,7 @@ class PagePayUtils implements ResolverInterface
             'return_url' => $resolved['return_url'],
             'app_auth_token' => $resolved['app_auth_token'],
             'biz_content' => json_encode($bizContent),
-        ], fn ($value) => null !== $value);
+        ], static fn ($value) => null !== $value);
 
         // Generate signature
         $query['sign'] = $this->signatureUtils->generate($query, [
@@ -118,7 +118,7 @@ class PagePayUtils implements ResolverInterface
             ->define('total_amount')
             ->default(null)
             ->allowedTypes('null', 'string')
-            ->normalize(function (Options $options, ?string $totalAmount) {
+            ->normalize(static function (Options $options, ?string $totalAmount) {
                 if (\is_string($totalAmount)) {
                     return $totalAmount;
                 }
@@ -172,7 +172,7 @@ class PagePayUtils implements ResolverInterface
             ->define('time_expire')
             ->default(null)
             ->allowedTypes('null', \DateTimeInterface::class)
-            ->normalize(fn (Options $options, ?\DateTimeInterface $timeExpire) => null === $timeExpire ? null : $timeExpire->format('Y-m-d H:i:s'))
+            ->normalize(static fn (Options $options, ?\DateTimeInterface $timeExpire) => null === $timeExpire ? null : $timeExpire->format('Y-m-d H:i:s'))
         ;
 
         $resolver

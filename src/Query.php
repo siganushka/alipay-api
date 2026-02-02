@@ -28,7 +28,7 @@ class Query extends AbstractAlipayRequest
             ->define('out_trade_no')
             ->default(null)
             ->allowedTypes('null', 'string')
-            ->normalize(function (Options $options, ?string $outTradeNo) {
+            ->normalize(static function (Options $options, ?string $outTradeNo) {
                 if (null === $options['trade_no'] && null === $outTradeNo) {
                     throw new MissingOptionsException('The required option "trade_no" or "out_trade_no" is missing.');
                 }

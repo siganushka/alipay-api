@@ -37,7 +37,7 @@ abstract class AbstractAlipayRequest extends AbstractRequest
     protected function configureRequest(RequestOptions $request, array $options): void
     {
         $bizContent = $this->getBizContent($options);
-        $bizContent = array_filter($bizContent, fn ($value) => null !== $value);
+        $bizContent = array_filter($bizContent, static fn ($value) => null !== $value);
         $bizContent = json_encode($bizContent, \JSON_UNESCAPED_UNICODE | \JSON_THROW_ON_ERROR);
 
         $query = array_filter([
@@ -49,7 +49,7 @@ abstract class AbstractAlipayRequest extends AbstractRequest
             'version' => '1.0',
             'app_auth_token' => $options['app_auth_token'],
             'biz_content' => $bizContent,
-        ], fn ($value) => null !== $value);
+        ], static fn ($value) => null !== $value);
 
         // Generate signature
         $query['sign'] = $this->signatureUtils->generate($query, [

@@ -35,11 +35,11 @@ class NotifyHandler implements ResolverInterface
     {
         $data = $request->request->all();
 
+        /** @var string */
         $signature = $data['sign'] ?? '';
-        $signatureData = array_filter($data, fn ($key) => !\in_array($key, ['sign', 'sign_type']), \ARRAY_FILTER_USE_KEY);
+        $signatureData = array_filter($data, static fn ($key) => !\in_array($key, ['sign', 'sign_type']), \ARRAY_FILTER_USE_KEY);
 
         $resolved = $this->resolve($options);
-
         if (!$this->signatureUtils->verify($signature, $signatureData, $resolved)) {
             throw new \RuntimeException('Invalid signature.');
         }

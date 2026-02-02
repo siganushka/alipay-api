@@ -28,7 +28,7 @@ class Refund extends AbstractAlipayRequest
             ->define('out_trade_no')
             ->default(null)
             ->allowedTypes('null', 'string')
-            ->normalize(function (Options $options, ?string $outTradeNo) {
+            ->normalize(static function (Options $options, ?string $outTradeNo) {
                 if (null === $options['trade_no'] && null === $outTradeNo) {
                     throw new MissingOptionsException('The required option "trade_no" or "out_trade_no" is missing.');
                 }
@@ -41,7 +41,7 @@ class Refund extends AbstractAlipayRequest
             ->define('refund_amount')
             ->default(null)
             ->allowedTypes('null', 'string')
-            ->normalize(function (Options $options, ?string $refundAmount) {
+            ->normalize(static function (Options $options, ?string $refundAmount) {
                 if (\is_string($refundAmount)) {
                     return $refundAmount;
                 }

@@ -50,7 +50,7 @@ class ParameterUtils implements ResolverInterface
             'merchant_order_no' => $resolved['merchant_order_no'],
             'ext_user_info' => $resolved['ext_user_info'],
             'query_options' => $resolved['query_options'],
-        ], fn ($value) => null !== $value && [] !== $value);
+        ], static fn ($value) => null !== $value && [] !== $value);
 
         $data = array_filter([
             'app_id' => $resolved['appid'],
@@ -62,7 +62,7 @@ class ParameterUtils implements ResolverInterface
             'notify_url' => $resolved['notify_url'],
             'app_auth_token' => $resolved['app_auth_token'],
             'biz_content' => json_encode($bizContent),
-        ], fn ($value) => null !== $value);
+        ], static fn ($value) => null !== $value);
 
         // Generate signature
         $data['sign'] = $this->signatureUtils->generate($data, [
@@ -104,7 +104,7 @@ class ParameterUtils implements ResolverInterface
             ->define('total_amount')
             ->default(null)
             ->allowedTypes('null', 'string')
-            ->normalize(function (Options $options, ?string $totalAmount) {
+            ->normalize(static function (Options $options, ?string $totalAmount) {
                 if (\is_string($totalAmount)) {
                     return $totalAmount;
                 }
@@ -146,7 +146,7 @@ class ParameterUtils implements ResolverInterface
             ->define('time_expire')
             ->default(null)
             ->allowedTypes('null', \DateTimeInterface::class)
-            ->normalize(fn (Options $options, ?\DateTimeInterface $timeExpire) => null === $timeExpire ? null : $timeExpire->format('Y-m-d H:i:s'))
+            ->normalize(static fn (Options $options, ?\DateTimeInterface $timeExpire) => null === $timeExpire ? null : $timeExpire->format('Y-m-d H:i:s'))
         ;
 
         $resolver
@@ -165,7 +165,7 @@ class ParameterUtils implements ResolverInterface
             ->define('agreement_sign_params')
             ->default(null)
             ->allowedTypes('null', 'array')
-            ->normalize(function (Options $options, ?array $agreementSignParams) {
+            ->normalize(static function (Options $options, ?array $agreementSignParams) {
                 if ('CYCLE_PAY_AUTH' === $options['product_code'] && null === $agreementSignParams) {
                     throw new MissingOptionsException('The required option "agreement_sign_params" is missing (when "product_code" option is set to "CYCLE_PAY_AUTH").');
                 }
