@@ -26,25 +26,28 @@ class NotifyHandler implements ResolverInterface
     }
 
     /**
-     * @param Request $request 支付宝支付结果通知请求对象
-     * @param array   $options 自定义选项
+     * @param Request $request         支付宝支付结果通知请求对象
+     * @param array   $options         自定义选项
+     * @param bool    $verifySignature 验证签名
      *
      * @return array 支付宝支付结果通知数据
      *
      * @throws \RuntimeException         支付通知请求数据无效
      * @throws InvalidSignatureException 签名验证失败
      */
-    public function handle(Request $request, array $options = []): array
+    public function handle(Request $request, array $options = [], bool $verifySignature = true): array
     {
         $data = $request->request->all();
 
-        /** @var string */
-        $signature = $data['sign'] ?? '';
-        $signatureData = array_filter($data, static fn ($key) => !\in_array($key, ['sign', 'sign_type']), \ARRAY_FILTER_USE_KEY);
+        if ($verifySignature) {
+            /** @var string */
+            $signature = $data['sign'] ?? '';
+            $signatureData = array_filter($data, static fn ($key) => !\in_array($key, ['sign', 'sign_type']), \ARRAY_FILTER_USE_KEY);
 
-        $resolved = $this->resolve($options);
-        if (!$this->signatureUtils->verify($signature, $signatureData, $resolved)) {
-            throw new InvalidSignatureException($signature, $data);
+            $resolved = $this->resolve($options);
+            if (!$this->signatureUtils->verify($signature, $signatureData, $resolved)) {
+                throw new InvalidSignatureException($signature, $data);
+            }
         }
 
         return $data;
