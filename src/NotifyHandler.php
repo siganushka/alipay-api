@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\ApiFactory\Alipay;
 
+use Siganushka\ApiFactory\Alipay\Exception\InvalidSignatureException;
 use Siganushka\ApiFactory\ResolverInterface;
 use Siganushka\ApiFactory\ResolverTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,7 +42,7 @@ class NotifyHandler implements ResolverInterface
 
         $resolved = $this->resolve($options);
         if (!$this->signatureUtils->verify($signature, $signatureData, $resolved)) {
-            throw new \RuntimeException('Invalid signature.');
+            throw new InvalidSignatureException($signature, $data);
         }
 
         return $data;

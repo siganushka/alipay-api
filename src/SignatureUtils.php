@@ -79,7 +79,7 @@ class SignatureUtils implements ResolverInterface
 
         try {
             $result = openssl_verify($stringToSignature, $rawSignature, $resolved['alipay_public_key'], $algorithm);
-        } catch (\Throwable $th) {
+        } catch (\Throwable) {
             return false;
         }
 

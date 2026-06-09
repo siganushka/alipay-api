@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\ApiFactory\Alipay\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Siganushka\ApiFactory\Alipay\Exception\InvalidSignatureException;
 use Siganushka\ApiFactory\Alipay\NotifyHandler;
 use Siganushka\ApiFactory\Alipay\SignatureUtils;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,17 +57,15 @@ class NotifyHandlerTest extends TestCase
 
     public function testHandleWithInvalidSignatureException(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Invalid signature');
+        $this->expectException(InvalidSignatureException::class);
+        $this->expectExceptionMessage('Invalid signature.');
 
         $notifyData = [
             'foo' => 'bar',
             'sign' => 'invalid_sign',
         ];
 
-        $content = json_encode($notifyData, \JSON_THROW_ON_ERROR);
-        $request = Request::create('/', 'POST', [], [], [], [], $content);
-
+        $request = Request::create('/', 'POST', $notifyData);
         $data = $this->notifyHandler->handle($request, [
             'alipay_public_key' => ConfigurationTest::PUBLIC_KEY,
             'app_private_key' => ConfigurationTest::PRIVATE_KEY,
