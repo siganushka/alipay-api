@@ -66,15 +66,15 @@ abstract class AbstractAlipayRequest extends AbstractRequest
 
     protected function parseResponse(ResponseInterface $response): array
     {
-        $rawResponse = $this->parseRawResponse($response);
-        if (isset($rawResponse['code']) && '10000' === $rawResponse['code']) {
-            return $rawResponse;
+        $rawData = $this->parseRawResponse($response);
+        if ('10000' === ($rawData['code'] ?? null)) {
+            return $rawData;
         }
 
-        $subCode = $rawResponse['sub_code'] ?? ($rawResponse['code'] ?? '00000');
-        $subMsg = $rawResponse['sub_msg'] ?? ($rawResponse['msg'] ?? 'error');
+        $subCode = $rawData['sub_code'] ?? ($rawData['code'] ?? '00000');
+        $subMsg = $rawData['sub_msg'] ?? ($rawData['msg'] ?? 'error');
 
-        throw new ParseResponseException($response, \sprintf('%s (%s)', $subMsg, $subCode));
+        throw new ParseResponseException($response, \sprintf('%s (%s)', $subMsg, $subCode), responseData: $rawData);
     }
 
     abstract protected function getMethodName(): string;
